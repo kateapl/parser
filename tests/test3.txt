@@ -1,0 +1,19 @@
+def  main(argc, argv){
+arg1 = 365;
+arg2= 24;
+while (arg1 > 0){
+    arg1 = arg1 - 24;
+    }
+   if (arg1==0){
+    arg1 = 365;}
+    else{
+    arg1 = 24;
+    }
+
+while ( 0){
+    arg1 = arg2;
+    }
+
+everything = 42;
+func(arg1, arg2, everything);
+}

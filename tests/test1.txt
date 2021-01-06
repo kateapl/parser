@@ -1,0 +1,27 @@
+def  func( a, b, c){
+c = a +b;
+return (c);
+}
+def  my_func(){
+a = 2;
+b = 6;
+c = 0;
+var =func(a,b,c);
+}
+
+def  main(argc, argv){
+arg1 = 365;
+arg2= 24;
+while (arg1 > 0){
+    arg1 = arg1 - 24;
+    }
+   if (arg1==0){
+    arg1 = 365;}
+
+while ( 0){
+    arg1 = arg2;
+    }
+
+everything = 42;
+func(arg1, arg2, everything);
+}

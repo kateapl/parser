@@ -70,6 +70,7 @@ t_ignore = ' \t\n'
 
 def t_error(t):
     print("Illegal character ", t.value[0])
+    raise SystemExit(2)
 
 
 lexer = lex.lex()

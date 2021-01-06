@@ -1,0 +1,26 @@
+program:
+	None
+	main:
+		args:
+			argc
+			argv
+		funcbody:
+			assign:
+				arg1
+				*:
+					3
+					**:
+						2
+						365
+			assign:
+				arg2
+				*:
+					2
+					365
+			assign:
+				b
+				1
+			assign:
+				a
+				--:
+					b

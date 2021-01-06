@@ -1,0 +1,15 @@
+program:
+	None
+	func:
+		args:
+			a
+			b
+			c
+		funcbody:
+			assign:
+				c
+				+:
+					a
+					b
+			return:
+				c

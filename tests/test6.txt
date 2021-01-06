@@ -1,0 +1,7 @@
+def  main(argc, argv){
+arg1 = 3*2**365;
+arg2 = 2*365;
+
+b = 1;
+a = --b;
+}

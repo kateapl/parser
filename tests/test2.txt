@@ -1,0 +1,4 @@
+def  func( a, b, c){
+c = a +b;
+return (c);
+}

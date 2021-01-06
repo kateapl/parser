@@ -55,15 +55,15 @@ def p_args(p):
 
 def p_funcbody(p):
     '''funcbody :
-                | if funcbody
-                | funcall funcbody
-                | assign funcbody
-                | while funcbody
-                | return funcbody'''
+                | funcbody if
+                | funcbody funcall
+                | funcbody assign
+                | funcbody while
+                | funcbody return'''
     if len(p) == 1:
         p[0] = Node('funcbody', [])
     else:
-        p[0] = p[2].add_parts([p[1]])
+        p[0] = p[1].add_parts([p[2]])
 
 
 def p_assign(p):
@@ -81,9 +81,10 @@ def p_if(p):
     '''if : IF LBR expression RBR LFBR funcbody RFBR ELSE LFBR funcbody RFBR
           | IF LBR expression RBR LFBR funcbody RFBR'''
     if len(p) == 12:
-        p[0] = Node('if', [p[3], p[6]]) if p[2] != 0 else Node('else', [p[3], p[10]])
+        p[0] = Node('if', [p[3], p[6]])
+        p[0] = Node('else', [p[3], p[10]])
     else:
-        p[0] = Node('if', [p[3], p[6]]) if p[2] != 0 else None
+        p[0] = Node('if', [p[3], p[6]])
 
 
 def p_while(p):
@@ -93,28 +94,46 @@ def p_while(p):
 
 
 def p_return(p):
-    '''return : RETURN expression LINEND
-              | RETURN ID LINEND '''
-    p[0] = Node('return', p[2])
+    '''return : RETURN LBR expression RBR LINEND
+              | RETURN LBR ID RBR LINEND '''
+    p[0] = Node('return', [p[3]])
 
 
 def p_expression_plus(p):
-    'expression : expression PLUS term'
+    '''expression : expression PLUS term
+                  | ID PLUS term'''
     p[0] = Node(p[2], [p[1], p[3]])
 
 
 def p_expression_minus(p):
-    'expression : expression MINUS term'
+    '''expression : expression MINUS term
+                  | ID MINUS term'''
+    p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_expression_compar(p):
+    '''expression : expression COMPAR expression'''
+    p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_expression_bin(p):
+    '''expression : expression DIS term'''
     p[0] = Node(p[2], [p[1], p[3]])
 
 
 def p_expression_term(p):
-    'expression : term'
+    '''expression : term
+                  | ID'''
     p[0] = p[1]
 
 
 def p_term_times(p):
     'term : term MUL factor'
+    p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_term_bin(p):
+    'term : term CON factor'
     p[0] = Node(p[2], [p[1], p[3]])
 
 
@@ -124,13 +143,24 @@ def p_term_div(p):
 
 
 def p_term_factor(p):
-    'term : factor'
+    '''term : factor
+            | ID'''
     p[0] = p[1]
 
 
 def p_factor_num(p):
     'factor : NUM'
     p[0] = p[1]
+
+
+def p_factor_bin(p):
+    'factor : DEN expression'
+    p[0] = Node(p[1], [p[2]])
+
+
+def p_factor_deg(p):
+    'factor : factor DEG expression'
+    p[0] = Node(p[2], [p[1], p[3]])
 
 
 def p_factor_expr(p):
@@ -141,25 +171,21 @@ def p_factor_expr(p):
 def p_error(p):
     print("parser ")
     print("Unexpected token:", p)
+    raise SystemExit(1)
 
 
 parser = yacc.yacc()
 
 
 def build_tree(text):
-    print('------text----------')
-    print(text)
-    print('------text----------')
     return parser.parse(text)
 
 
-def outputing():
-    read_file = open('input.txt', 'r')
-    text = read_file.read()
+def outputing(text):
     result = build_tree(text)
     print('------res----------')
     print(result)
     print('------res----------')
+    result = str(result)
+    return result
 
-    write_file = open('output.txt', 'w')
-    write_file.write(result)
