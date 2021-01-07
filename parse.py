@@ -78,14 +78,18 @@ def p_funcall(p):
 
 
 def p_if(p):
-    '''if : IF LBR expression RBR LFBR funcbody RFBR ELSE LFBR funcbody RFBR
-          | IF LBR expression RBR LFBR funcbody RFBR'''
-    if len(p) == 12:
+    '''if : IF LBR expression RBR LFBR funcbody RFBR elsebranch'''
+    if p[8] is None:
         p[0] = Node('if', [p[3], p[6]])
-        p[0] = Node('else', [p[3], p[10]])
     else:
-        p[0] = Node('if', [p[3], p[6]])
+        p[0] = Node('if', [p[3], p[6], p[8]])
 
+
+def p_elsebranch(p):
+    '''elsebranch :
+                  | ELSE LFBR funcbody RFBR'''
+    if len(p) == 5:
+        p[0] = Node('else', [p[3]])
 
 def p_while(p):
     '''while : WHILE LBR expression RBR LFBR funcbody RFBR'''
@@ -112,7 +116,12 @@ def p_expression_minus(p):
 
 
 def p_expression_compar(p):
-    '''expression : expression COMPAR expression'''
+    '''expression : expression MOREQ expression
+                  | expression LESEQ expression
+                  | expression LT expression
+                  | expression GT expression
+                  | expression EQ expression
+                  | expression NE expression'''
     p[0] = Node(p[2], [p[1], p[3]])
 
 
@@ -183,9 +192,9 @@ def build_tree(text):
 
 def outputing(text):
     result = build_tree(text)
-    print('------res----------')
-    print(result)
-    print('------res----------')
+   # print('------res----------')
+   # print(result)
+   # print('------res----------')
     result = str(result)
     return result
 

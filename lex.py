@@ -18,9 +18,14 @@ tokens = [
     'DIVIDE',
     'ID',
     'DIS',
+    'LESEQ',
+    'MOREQ',
     'CON',
     'DEN',
-    'COMPAR',
+    'LT',  # <
+    'GT',  # >
+    'EQ',  # ==
+    'NE',  # /=
     'LBR',
     'LFBR',
     'RFBR',
@@ -32,13 +37,17 @@ tokens = [
 
 
 def t_ID(t):
-    r'[a-z_][a-z_0-9]*'
+    r'[a-zA-Z][A-Za-z_0-9]*'
     t.type = reserved.get(t.value, 'ID')
     return t
 
 
 def t_NUM(t):
     r'[0-9]+'
+    if len(t.value) > 1:
+        if str(t.value)[0] == '0':
+            print()
+            t_error(t)
     t.value = int(t.value)
     return t
 
@@ -55,7 +64,12 @@ t_DIVIDE = r'/'
 t_DIS = r'\|\|'  # ||
 t_CON = r'&&'
 t_DEN = r'\-\-'
-t_COMPAR = r'(\<|\<=|==|\>|\>=|/=)'  # <, <=, ==, /=, >, >=
+t_LESEQ = r'(\<=)'  # <=
+t_MOREQ = r'(\>=)'  # >=
+t_LT = r'(\<)' # <
+t_GT = r'(\>)' # >
+t_EQ = r'(==)' # ==
+t_NE = r'(/=)' # /=
 t_ASS = r'='
 t_LINEND = r';'
 t_COMMA = r','
@@ -74,15 +88,3 @@ def t_error(t):
 
 
 lexer = lex.lex()
-
-read_file = open('input.txt', 'r')
-text = read_file.read()
-read_file.close()
-lexer.input(text)
-
-
-while True:
-    tok = lexer.token()
-    if not tok:
-        break
-    print(tok)

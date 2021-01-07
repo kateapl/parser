@@ -21,14 +21,19 @@ program:
 						-:
 							arg1
 							24
-			else:
+			if:
 				==:
 					arg1
 					0
 				funcbody:
 					assign:
 						arg1
-						24
+						365
+				else:
+					funcbody:
+						assign:
+							arg1
+							24
 			None
 			assign:
 				everything

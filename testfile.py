@@ -64,5 +64,32 @@ class TestConAndDis(unittest.TestCase):
 
         self.assertEqual(result, right)
 
+
+class TestCompare(unittest.TestCase):
+    def test8(self):
+        read_file = open('tests/test8.txt', 'r')
+        text = read_file.read()
+        read_file.close()
+        result = outputing(text)
+        read_file = open('tests/out8.txt', 'r')
+        right = read_file.read()
+        read_file.close()
+
+        self.assertEqual(result, right)
+
+
+class TestRegistres(unittest.TestCase):
+    def test9(self):
+        read_file = open('tests/test9.txt', 'r')
+        text = read_file.read()
+        read_file.close()
+        result = outputing(text)
+        read_file = open('tests/out9.txt', 'r')
+        right = read_file.read()
+        read_file.close()
+
+        self.assertEqual(result, right)
+
+
 if __name__ == '__main__':
     unittest.main()

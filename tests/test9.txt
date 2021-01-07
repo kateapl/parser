@@ -1,0 +1,4 @@
+def meaning(suffer, pain){
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAA = suffer+pain;
+Life = AAAAAAAAAAAAAAAAAAAAAAAAAAAAA;
+}

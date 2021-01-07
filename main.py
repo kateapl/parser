@@ -1,16 +1,19 @@
 from parse import outputing
 
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    read_file = open('input.txt', 'r')
-    text = read_file.read()
-    read_file.close()
 
-    write_file = open('input.txt.out', 'w')
+    while True:
+        filename = input('Input name of file:')
+        if filename.endswith(".txt"):
+            read_file = open(filename, 'r')
+            text = read_file.read()
+            read_file.close()
+            break
+        else:
+            print("It is not right file, repeat")
+
+    write_file = open(filename + '.out', 'w')
     write_file.write(outputing(text))
     write_file.close()
 
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

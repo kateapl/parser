@@ -1,0 +1,15 @@
+program:
+	None
+	meaning:
+		args:
+			suffer
+			pain
+		funcbody:
+			assign:
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				+:
+					suffer
+					pain
+			assign:
+				Life
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
