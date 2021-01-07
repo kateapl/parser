@@ -90,6 +90,18 @@ class TestRegistres(unittest.TestCase):
 
         self.assertEqual(result, right)
 
+class TestWhileOptimisation(unittest.TestCase):
+    def test10(self):
+        read_file = open('tests/test10.txt', 'r')
+        text = read_file.read()
+        read_file.close()
+        result = outputing(text)
+        read_file = open('tests/out10.txt', 'r')
+        right = read_file.read()
+        read_file.close()
+
+        self.assertEqual(result, right)
+
 
 if __name__ == '__main__':
     unittest.main()

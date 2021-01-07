@@ -22,6 +22,9 @@ class Node:
         self.parts = parts
 
 
+wrong_in_while = 0
+
+
 def p_program(p):
     '''program : progbody func'''
     p[0] = Node('program', [p[1], p[2]])
@@ -93,8 +96,11 @@ def p_elsebranch(p):
 
 def p_while(p):
     '''while : WHILE LBR expression RBR LFBR funcbody RFBR'''
-    if p[3] != 0:
+    global wrong_in_while
+    if p[3] != 0 and wrong_in_while == 0:
         p[0] = Node('while', [p[3], p[6]])
+    if wrong_in_while == 1:
+        wrong_in_while = 0
 
 
 def p_return(p):
@@ -113,6 +119,9 @@ def p_expression_minus(p):
     '''expression : expression MINUS term
                   | ID MINUS term'''
     p[0] = Node(p[2], [p[1], p[3]])
+    if p[1] == p[3]:
+        global wrong_in_while
+        wrong_in_while = 1
 
 
 def p_expression_compar(p):
@@ -123,6 +132,15 @@ def p_expression_compar(p):
                   | expression EQ expression
                   | expression NE expression'''
     p[0] = Node(p[2], [p[1], p[3]])
+
+    global wrong_in_while
+    if p[2] == '==':  # if denial in expression
+        wrong_in_while = 2  # then in while processing it
+
+    if p[2] != '==':
+        if p[1] == p[3]:
+            wrong_in_while = 1
+
 
 
 def p_expression_bin(p):
@@ -139,6 +157,9 @@ def p_expression_term(p):
 def p_term_times(p):
     'term : term MUL factor'
     p[0] = Node(p[2], [p[1], p[3]])
+    if p[1] == 0 or p[3] == 0:
+        global wrong_in_while
+        wrong_in_while = 1
 
 
 def p_term_bin(p):
@@ -149,6 +170,9 @@ def p_term_bin(p):
 def p_term_div(p):
     'term : term DIVIDE factor'
     p[0] = Node(p[2], [p[1], p[3]])
+    if p[1] == 0:
+        global wrong_in_while
+        wrong_in_while = 1
 
 
 def p_term_factor(p):
@@ -165,6 +189,9 @@ def p_factor_num(p):
 def p_factor_bin(p):
     'factor : DEN expression'
     p[0] = Node(p[1], [p[2]])
+    global wrong_in_while
+    if wrong_in_while == 2:
+        wrong_in_while = 1
 
 
 def p_factor_deg(p):
@@ -193,8 +220,10 @@ def build_tree(text):
 def outputing(text):
     result = build_tree(text)
    # print('------res----------')
-   # print(result)
-   # print('------res----------')
+    #print(result)
+    #print('------res----------')
     result = str(result)
+    global wrong_in_while
+    wrong_in_while = 0
     return result
 
