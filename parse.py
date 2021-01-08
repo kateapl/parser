@@ -97,7 +97,7 @@ def p_elsebranch(p):
 def p_while(p):
     '''while : WHILE LBR expression RBR LFBR funcbody RFBR'''
     global wrong_in_while
-    if p[3] != 0 and wrong_in_while == 0:
+    if p[3] != 0 and wrong_in_while != 1:
         p[0] = Node('while', [p[3], p[6]])
     if wrong_in_while == 1:
         wrong_in_while = 0
