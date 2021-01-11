@@ -1,17 +1,12 @@
 from parse import outputing
-
+import sys
 
 if __name__ == '__main__':
 
-    while True:
-        filename = input('Input name of file:')
-        if filename.endswith(".txt"):
-            read_file = open(filename, 'r')
-            text = read_file.read()
-            read_file.close()
-            break
-        else:
-            print("It is not right file, repeat")
+    filename = sys.argv[1]
+    read_file = open(filename, 'r')
+    text = read_file.read()
+    read_file.close()
 
     write_file = open(filename + '.out', 'w')
     write_file.write(outputing(text))
