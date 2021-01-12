@@ -28,7 +28,7 @@ program:
 					0
 				assign:
 					var
-					call func func:
+					variable func func:
 						args:
 							a
 							b

@@ -47,7 +47,9 @@ def p_func(p):
 def p_args(p):
     '''args :
             | ID
-            | args COMMA ID'''
+            | args COMMA ID
+            | expression
+            | args COMMA expression'''
     if len(p) == 1:
         p[0] = Node('args', [])
     elif len(p) == 2:
@@ -70,14 +72,18 @@ def p_funcbody(p):
 
 
 def p_assign(p):
-    '''assign : ID ASS expression LINEND
-              | ID ASS funcall'''
+    '''assign : ID ASS expression LINEND'''
     p[0] = Node('assign', [p[1], p[3]])
 
 
 def p_funcall(p):
     '''funcall : ID LBR args RBR LINEND'''
-    p[0] = Node('call func '+p[1], [p[3]])
+    p[0] = Node('call func ' + p[1], [p[3]])
+
+
+def p_funcvar(p):
+    '''funcvar : ID LBR args RBR'''
+    p[0] = Node('variable func ' + p[1], [p[3]])
 
 
 def p_if(p):
@@ -104,9 +110,9 @@ def p_while(p):
 
 
 def p_return(p):
-    '''return : RETURN LBR expression RBR LINEND
-              | RETURN LBR ID RBR LINEND '''
-    p[0] = Node('return', [p[3]])
+    '''return : RETURN expression LINEND
+              | RETURN ID LINEND'''
+    p[0] = Node('return', [p[2]])
 
 
 def p_expression_plus(p):
@@ -150,6 +156,7 @@ def p_expression_bin(p):
 
 def p_expression_term(p):
     '''expression : term
+                  | funcvar
                   | ID'''
     p[0] = p[1]
 
@@ -176,13 +183,14 @@ def p_term_div(p):
 
 
 def p_term_factor(p):
-    '''term : factor
-            | ID'''
+    '''term : factor'''
     p[0] = p[1]
 
 
 def p_factor_num(p):
-    'factor : NUM'
+    '''factor : NUM
+              | funcvar
+              | ID'''
     p[0] = p[1]
 
 
@@ -226,4 +234,3 @@ def outputing(text):
     global wrong_in_while
     wrong_in_while = 0
     return result
-

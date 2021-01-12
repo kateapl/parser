@@ -1,6 +1,6 @@
 def  func( a, b, c){
 c = a +b;
-return (c);
+return c;
 }
 def  my_func(){
 a = 2;
