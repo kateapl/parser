@@ -1,5 +1,4 @@
 program:
-	None
 	func:
 		args:
 			a

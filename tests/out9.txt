@@ -1,5 +1,4 @@
 program:
-	None
 	meaning:
 		args:
 			suffer

@@ -62,7 +62,6 @@ program:
 					assign:
 						arg1
 						365
-			None
 			assign:
 				everything
 				42

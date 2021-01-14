@@ -1,5 +1,4 @@
 program:
-	None
 	fu:
 		args:
 			first

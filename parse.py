@@ -7,7 +7,8 @@ class Node:
     def parts_str(self):
         st = []
         for part in self.parts:
-            st.append(str(part))
+            if part != None:
+                st.append(str(part))
         return "\n".join(st)
 
     def __repr__(self):
@@ -23,7 +24,6 @@ class Node:
 
 
 wrong_in_while = 0
-
 
 def p_program(p):
     '''program : progbody func'''
@@ -46,8 +46,6 @@ def p_func(p):
 
 def p_args(p):
     '''args :
-            | ID
-            | args COMMA ID
             | expression
             | args COMMA expression'''
     if len(p) == 1:
@@ -100,43 +98,42 @@ def p_elsebranch(p):
     if len(p) == 5:
         p[0] = Node('else', [p[3]])
 
+
 def p_while(p):
-    '''while : WHILE LBR expression RBR LFBR funcbody RFBR'''
+    '''while : WHILE LBR condition RBR LFBR funcbody RFBR'''
     global wrong_in_while
     if p[3] != 0 and wrong_in_while != 1:
         p[0] = Node('while', [p[3], p[6]])
     if wrong_in_while == 1:
         wrong_in_while = 0
 
-
-def p_return(p):
-    '''return : RETURN expression LINEND
-              | RETURN ID LINEND'''
-    p[0] = Node('return', [p[2]])
-
-
-def p_expression_plus(p):
-    '''expression : expression PLUS term
-                  | ID PLUS term'''
-    p[0] = Node(p[2], [p[1], p[3]])
+# condition describe
+def p_condition_plus(p):
+    '''condition : condition PLUS con'''
+    if isinstance(p[1], int) and isinstance(p[3], int):
+        p[0] = p[1] + p[3]
+    else:
+        p[0] = Node(p[2], [p[1], p[3]])
 
 
-def p_expression_minus(p):
-    '''expression : expression MINUS term
-                  | ID MINUS term'''
-    p[0] = Node(p[2], [p[1], p[3]])
-    if p[1] == p[3]:
+def p_condition_minus(p):
+    '''condition : condition MINUS con'''
+    if isinstance(p[1], int) and isinstance(p[3], int):
+        p[0] = p[1] - p[3]
+    elif p[1] == p[3]:
         global wrong_in_while
         wrong_in_while = 1
+    else:
+        p[0] = Node(p[2], [p[1], p[3]])
 
 
-def p_expression_compar(p):
-    '''expression : expression MOREQ expression
-                  | expression LESEQ expression
-                  | expression LT expression
-                  | expression GT expression
-                  | expression EQ expression
-                  | expression NE expression'''
+def p_condition_compar(p):
+    '''condition : condition MOREQ condition
+                  | condition LESEQ condition
+                  | condition LT condition
+                  | condition GT condition
+                  | condition EQ condition
+                  | condition NE condition'''
     p[0] = Node(p[2], [p[1], p[3]])
 
     global wrong_in_while
@@ -148,6 +145,105 @@ def p_expression_compar(p):
             wrong_in_while = 1
 
 
+def p_condition_bin(p):
+    '''condition : condition DIS con'''
+    if p[1] == 0 and p[3] == 0:
+        p[0] = 0
+    else:
+        p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_condition_con(p):
+    '''condition : con'''
+    p[0] = p[1]
+
+
+def p_con_times(p):
+    'con : con MUL confactor'
+    if isinstance(p[1], int) and isinstance(p[3], int):
+        p[0] = p[1] * p[3]
+    elif p[1] == 0 or p[3] == 0:
+        global wrong_in_while
+        wrong_in_while = 1
+    else:
+        p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_con_bin(p):
+    'con : con CON confactor'
+    if p[1] == 0 or p[3] == 0:
+        p[0] = 0
+    else:
+        p[0] = Node(p[2], [p[1], p[3]])
+
+def p_con_div(p):
+    'con : con DIVIDE confactor'
+    if isinstance(p[1], int) and isinstance(p[3], int):
+        p[0] = p[1] / p[3]
+    elif p[1] == 0:
+        global wrong_in_while
+        wrong_in_while = 1
+    else:
+        p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_con_confactor(p):
+    '''con : confactor'''
+    p[0] = p[1]
+
+
+def p_confactor_num(p):
+    '''confactor : NUM
+              | funcvar
+              | ID'''
+    p[0] = p[1]
+
+
+def p_confactor_bin(p):
+    'confactor : DEN condition'
+    p[0] = Node(p[1], [p[2]])
+    global wrong_in_while
+    if wrong_in_while == 2:
+        wrong_in_while = 1
+
+def p_confactor_deg(p):
+    'confactor : confactor DEG condition'
+    if isinstance(p[1], int) and isinstance(p[3], int):
+        p[0] = p[1] ** p[3]
+    else:
+        p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_confactor_expr(p):
+    'confactor : LBR condition RBR'
+    p[0] = p[2]
+
+
+    # end condition describe
+def p_return(p):
+    '''return : RETURN expression LINEND'''
+    p[0] = Node('return', [p[2]])
+
+
+def p_expression_plus(p):
+    '''expression : expression PLUS term'''
+    p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_expression_minus(p):
+    '''expression : expression MINUS term'''
+    p[0] = Node(p[2], [p[1], p[3]])
+
+
+def p_expression_compar(p):
+    '''expression : expression MOREQ expression
+                  | expression LESEQ expression
+                  | expression LT expression
+                  | expression GT expression
+                  | expression EQ expression
+                  | expression NE expression'''
+    p[0] = Node(p[2], [p[1], p[3]])
+
 
 def p_expression_bin(p):
     '''expression : expression DIS term'''
@@ -155,18 +251,13 @@ def p_expression_bin(p):
 
 
 def p_expression_term(p):
-    '''expression : term
-                  | funcvar
-                  | ID'''
+    '''expression : term'''
     p[0] = p[1]
 
 
 def p_term_times(p):
     'term : term MUL factor'
     p[0] = Node(p[2], [p[1], p[3]])
-    if p[1] == 0 or p[3] == 0:
-        global wrong_in_while
-        wrong_in_while = 1
 
 
 def p_term_bin(p):
@@ -177,9 +268,6 @@ def p_term_bin(p):
 def p_term_div(p):
     'term : term DIVIDE factor'
     p[0] = Node(p[2], [p[1], p[3]])
-    if p[1] == 0:
-        global wrong_in_while
-        wrong_in_while = 1
 
 
 def p_term_factor(p):
@@ -197,9 +285,6 @@ def p_factor_num(p):
 def p_factor_bin(p):
     'factor : DEN expression'
     p[0] = Node(p[1], [p[2]])
-    global wrong_in_while
-    if wrong_in_while == 2:
-        wrong_in_while = 1
 
 
 def p_factor_deg(p):

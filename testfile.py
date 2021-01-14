@@ -90,6 +90,7 @@ class TestRegistres(unittest.TestCase):
 
         self.assertEqual(result, right)
 
+
 class TestWhileOptimisation(unittest.TestCase):
     def test10(self):
         read_file = open('tests/test10.txt', 'r')

@@ -1,5 +1,4 @@
 program:
-	None
 	main:
 		args:
 			argc
@@ -34,7 +33,6 @@ program:
 						assign:
 							arg1
 							24
-			None
 			assign:
 				everything
 				42
